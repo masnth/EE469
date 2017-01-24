@@ -25,7 +25,6 @@ wire [3:0] o;
  dec2to4 dut(i, en, o);
 
  initial begin
- $timeformat(-9, 1, " ns", 6); #1;
  i[0] = 1'b0; // time = 0
  i[1] = 1'b0;
  en = 1'b0;
