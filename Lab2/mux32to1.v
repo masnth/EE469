@@ -33,11 +33,11 @@ module mux16to1(data, q, sel);
 	
 	wire mux_1, mux_2, mux_3, mux_4;
 	
-	mux4to1 m1(data[0], data[1], data[2], data[3], mux_1, sel[3:2]); 
-	mux4to1 m2(data[4], data[5], data[6], data[7], mux_2, sel[3:2]);
-	mux4to1 m3(data[8], data[9], data[10], data[11], mux_3, sel[3:2]);
-	mux4to1 m4(data[12], data[13], data[14], data[15], mux_4, sel[3:2]);
-	mux4to1 m5(mux_1, mux_2, mux_3, mux_4, q, sel[1:0]);
+	mux4to1 m1(data[0], data[1], data[2], data[3], mux_1, sel[1:0]); 
+	mux4to1 m2(data[4], data[5], data[6], data[7], mux_2, sel[1:0]);
+	mux4to1 m3(data[8], data[9], data[10], data[11], mux_3, sel[1:0]);
+	mux4to1 m4(data[12], data[13], data[14], data[15], mux_4, sel[1:0]);
+	mux4to1 m5(mux_1, mux_2, mux_3, mux_4, q, sel[3:2]);
 	
 endmodule
 
