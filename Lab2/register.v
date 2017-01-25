@@ -1,8 +1,8 @@
-module register(dataOut, dataOutBar, dataIn, clk, rst);
+module register(dataOut,  dataIn, clk, rst);
 	input clk, rst;
 	input [31:0] dataIn;
 	output wire [31:0] dataOut;
-	output wire [31:0] dataOutBar;
+	wire [31:0] dataOutBar;
 
 	genvar i;
 	
