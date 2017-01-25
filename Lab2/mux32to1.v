@@ -1,13 +1,12 @@
 module mux2to1(data1, data2, q, sel);
 
-	input data1, data2;
-	input sel;
 	output q;
-	
-	tri q;
-	
-	bufif1 (q, data1, sel);
-	bufif0 (q, data2, sel);
+	input sel,data1 , data2;
+	wire w1,w2,w3;
+	not n1(w1,sel);
+	and a1(w2,w1,data1);
+	and a2(w3,sel,data2);
+	or o1(q,w2,w3);
 	
 endmodule
 
