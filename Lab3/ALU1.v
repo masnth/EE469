@@ -12,10 +12,11 @@ module ALU(out, v, c, n ,z, a, b, control, clk, rst);
 	wire [31:0] outADD, outSUB, outSHL;
 	wire c1;
 	
+	ls l1(outSHL, a, b[1:0], clk);
 	addx32 a1(outADD, c1, a, b); //(control[0]&~control[1]&~control[2]), clk);
 	subx32 s1(outSUB, c1, a, b); //(control[0]&control[1]&~control[2]), clk);
 	
-	always @ (posedge clk)
+	always @ (control)
 	case (control)
 	3'b000: //NOP
 			out = 0;
@@ -72,3 +73,37 @@ module subx32(output wire[31:0] out, output wire c, input [31:0] a, b); // input
 	endgenerate
 	assign c = cin[31];
 endmodule	
+
+// mux 
+module mux(out, a0, a1, sel, clk);
+	input clk;
+	input a0, a1, sel;
+	output reg out;
+	always @(posedge clk)
+		if (sel == 1'b0)
+			out = a0;
+		else 
+			out = a1;
+endmodule
+
+// left shift 1 bit.
+module ls(out, in, bitS, clk);
+	input [31:0] in;
+	input [1:0] bitS;
+	input clk;
+	
+	output wire [31:0] out;
+	wire [31:0] out2b;
+	genvar i;
+	generate
+		mux m20(out2b[0], in[0], 1'b0, bitS[1], clk);
+		mux m21(out2b[1], in[1], 1'b0, bitS[1], clk);
+		mux m11(out[0], out2b[0], 1'b0, bitS[0], clk);
+		mux m12(out[1], out2b[1], out2b[0], bitS[0], clk);
+		for (i = 2; i < 32; i=i+1) begin:eachMux
+			mux m2(out2b[i], in[i], in[i-2], bitS[1], clk); //out, a0, a1, sel, clk
+			mux m1(out[i], out2b[i], out2b[i-1], bitS[0], clk);
+		end
+	endgenerate
+endmodule
+	
