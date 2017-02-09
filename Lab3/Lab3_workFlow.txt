@@ -3,11 +3,11 @@
 Board Name: 5CSEMA5F31C6
 
 what we have:						ALU without shift
-									Test for ALU 
+							Test for ALU 
 						
-What we still need : 				Shift for ALU (anh dang viet)
-									Driver to test ALU with Switch on board
-									Connect ALU to RegFile
-									C program
-									Report
+What we still need : 					Shift for ALU (anh dang viet) // DONE
+							Driver to test ALU with Switch on board
+							Connect ALU to RegFile
+							C program
+							Report
 									
