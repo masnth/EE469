@@ -23,16 +23,20 @@ module test(aOut, bOut, controlO, clk, rst);
 	initial begin
 	clk = 1'b0;
 	aOut = 32'd5;
-	bOut = 32'd1;
-	controlO = 3'b011;
+	bOut = 32'd3;
+	controlO = 3'b000;
 	#clkDelay;	 
 	#clkDelay;
 	end
 	always #clkDelay clk = ~clk;
 	always @(posedge clk) begin
 		i = i + 1;
-		if (i == 3) #clkDelay controlO = 3'b010;
-		if (i == 10) #clkDelay controlO = 3'b001;
+		if (i == 2)	controlO = 3'b011;
+		if (i == 4) controlO = 3'b010;
+		
+		if (i == 10) controlO = 3'b001;
+		
+		if (i == 20) controlO = 3'b110;
 	end
 		
 endmodule
