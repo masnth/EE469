@@ -16,4 +16,22 @@ module leftShifter(data, bits, dataOut, clk);
 			dataOut <= data;
 	end
 endmodule
+
+module xorGate_testbench;
+	
+	wire clk;
+	reg [7:0] data1, data2;
+	wire [7:0] dataOut;
+	
+	xorGate xor1 (data1, data2, dataOut, clk);
+
+	
+	initial begin 
+	
+	#5 data1 = 8'b01010101; data2 = 8'b01010000;
+	#5
+	
+	$stop();
+	end
+endmodule 
 			
