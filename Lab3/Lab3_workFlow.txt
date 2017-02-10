@@ -6,10 +6,10 @@ what we have:						ALU without shift
 							Test for ALU 
 						
 What we still need : 					Shift for ALU 		 			// DONE
-							Driver to test ALU with Switch on board		// 
-							Connect ALU to RegFile				//
-							C program					//
-							Report						//
+							Driver to test ALU with Switch on board		// Bao is working
+							Connect ALU to RegFile				// Huy is working
+							C program					// Phu is working
+							Report						// TBD
 							mux8to1 for 32 bits writing in gate level  	// DONE
 							Behavioral level work  				// Bao is working 
 									
