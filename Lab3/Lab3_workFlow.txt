@@ -12,5 +12,8 @@ What we still need : 					Shift for ALU 		 			// DONE
 							Report						// TBD
 							mux8to1 for 32 bits writing in gate level  	// DONE
 							Behavioral level work  				// Bao is working 
+							
+							
+						
 									
 									
