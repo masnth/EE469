@@ -5,9 +5,12 @@ Board Name: 5CSEMA5F31C6
 what we have:						ALU without shift
 							Test for ALU 
 						
-What we still need : 					Shift for ALU (anh dang viet) // DONE
-							Driver to test ALU with Switch on board
-							Connect ALU to RegFile
-							C program
-							Report
+What we still need : 					Shift for ALU 		 			// DONE
+							Driver to test ALU with Switch on board		// 
+							Connect ALU to RegFile				//
+							C program					//
+							Report						//
+							mux8to1 for 32 bits writing in gate level  	// DONE
+							Behavioral level work  				// Bao is working 
+									
 									
