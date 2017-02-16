@@ -9,12 +9,12 @@ module add(data1, data2, result, v, c, clk);
 	
 	always @(*) begin
 		temp = data1  + data2;
-			if( temp > 2^31 - 1) begin
+			if( temp > 2147483647) begin
 				c = 1'b1;
 				v = 1'b1;
 			end
 			
-			else if ( temp <= 2^31 - 1) begin
+			else if ( temp <= 2147483647) begin
 				c = 1'b0;
 				v = 1'b0;
 			end
