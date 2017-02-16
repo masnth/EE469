@@ -12,3 +12,25 @@ module switchToData(hex, binary);
 			binary = 4'b0000;
 	end
 endmodule
+
+module switchToData_testbench();
+
+	reg hex;
+	wire [3:0] binary;
+	
+	switchToData dux (hex, binary);
+	
+	
+	initial begin
+
+	#5 hex = 1'b1;
+	#5 hex = 1'b1;
+	#5 hex = 1'b1;
+	#5 hex = 1'b0;
+	#5 hex = 1'b1;
+	#5 hex = 1'b0;
+	
+	$stop();
+	end
+	
+endmodule

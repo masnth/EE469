@@ -21,3 +21,25 @@ module inputData(hexDigit, dataOut);
 		dataOut[3:0]   = binary[3:0];
 	end
 endmodule
+
+module inputData_testbench();
+
+	reg [3:0] hexDigit;
+	wire [31:0] dataOut;
+	
+	inputData dux (hexDigit, dataOut);
+	
+	initial begin 
+		
+		#5 hexDigit = 4'b1010;
+		#5 hexDigit = 4'b1110;
+		#5 hexDigit = 4'b1011;
+		#5 hexDigit = 4'b0000;
+		#5 hexDigit = 4'b1111;
+		#5 hexDigit = 4'b1000;
+		#5 hexDigit = 4'b0011;
+		
+		$stop();
+		
+		end
+endmodule

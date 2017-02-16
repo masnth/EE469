@@ -11,7 +11,8 @@ module hexDisplay(dataA, dataB, result, sel, dataOut, clk);
 		case(sel) 
 			2'b00: dataOut = dataA;
 			2'b01: dataOut = dataB;
-			2'b1x: dataOut = result;
+			2'b10: dataOut = result;
+			2'b11: dataOut = result;
 		endcase
 	end
 endmodule

@@ -1,13 +1,13 @@
-module add(data1, data2, result, v, c, clk);
+module add(data1, data2, result, v, c, clk, temp);
 
 	input clk;
 	input [31:0] data1, data2;
 	output reg [31:0] result;
 	output reg v, c;
 	
-	reg [32:0] temp;
+	output reg [32:0] temp;
 	
-	always @(*) begin
+	always @(data1, data2) begin
 		temp = data1  + data2;
 			if( temp > 2147483647) begin
 				c = 1'b1;
@@ -21,7 +21,8 @@ module add(data1, data2, result, v, c, clk);
 		result = temp[31:0];
 	end
 endmodule
-	
+
+
 module add_testbench();
 
 	reg clk;
@@ -53,3 +54,9 @@ module add_testbench();
 	
 	end
 endmodule 
+
+	
+
+	
+
+	
