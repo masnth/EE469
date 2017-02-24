@@ -1,0 +1,233 @@
+C
+*xptr = y;
+
+Assy
+MOV @ R1, R2;
+
+Instruction cycle
+fetch 
+decode
+execute
+write back (no in this case)
+NEXT
+
+RTN:
+MAR <- PC
+Read
+Wait
+MDR <- MAR
+OR <- MDRR
+Decode
+Decode opcode field
+
+Execute MOV @ R1, R2;;
+MAR <- IR<21..12>
+MDR <- IR<2..0>
+Write
+Writeback : NO
+
+NEXT
+TR0 <- PC
+select constant
+A <- constant
+TR1 <- A + TR0
+PC <- TR1
+
+FETCH
+PCout, MARin
+ReAD
+M[MAR], MDR(in)
+MDRead, IR(in)
+
+DECODE
+DEcode opcode field
+
+Execute
+MARin, R1out
+MDRin, R2out
+Write
+Writeback: NO
+
+NEXT
+PCout, TR0in
+select const
+Ain, const
+A, TR0out, ADD, TR1in
+TR1out, PCin
+
+
+
+Technique
+1. FSM
+	N bit vector
+		control word -> micro-instruction
+		microprosition control
+		control store
+		constraints
+			simultaneous bits
+			others
+	ID - categorizing of control sginal
+		F0, F1, PT0
+		F2		memory, TR IO
+		F3		ALU
+		F4		expansion	
+		F5		
+		F6
+		F7
+		
+	Reg Out
+		None
+		R0 .. R7
+		PC
+		MDR
+		TR1
+	Reg IN
+		None
+		R0 .. R7
+		PC
+		IR
+	Memory & Temp
+		None
+		MAR
+		MDR
+		TR0
+		Accm
+	ALU
+		1C function
+	Memory	
+		None
+		2bit
+	Mux control		1 bit
+		sel control
+		select Bus TR1
+	Wait			1 bit
+		None	
+		wait
+	Flow control	1 bit
+		contrinue
+		end	
+			
+			
+*xptr = y;
+MOV @R1,R2;
+MARin, R1out
+MDRin, R2out
+write
+
+FSM
+	in -> FSM -> out
+	
+	might need feedback
+	n inputs,
+	m outputs
+	p state variable
+	M{I, O,, S, S, lamda}
+	S: IxS -> S
+	lamda1: IxS -> O moodly
+	lamda2: S -> O: moore
+	
+state machine approach is not considered branching/ jumping (branch != jump)
+when changing signal, you need another edge to change
+	
+absolute 
+relative to current position
+	No jump or branch 
+	PC <- PC + 1
+	Jump or Branch
+		until
+			PC <- adx
+		cond
+			pulse
+
+Relative
+	No
+		PC <- PC + 1
+	J&B
+		uncond
+			PC <- PC + offset
+		cond
+			False:
+				PC <- PC + 1
+				K: PC <- PC + 1
+			True
+				PC <- PC + offset
+				K: PC <- PC + offset
+			
+	J&B taken: 			2 bits
+		00: NO
+		01: J
+		10: Branch
+	cond or uncond:		1 bit
+		0: uncond
+		1: cond
+	cond
+		00: Zero 
+		01:	Negative
+		10: Carry
+		11: Overflow
+		
+Single clock cycle control
+	Reg Set <- reg file
+	bus structure <= several local busses
+	Several data & instruction mem.
+	
+	Reg File
+		A addr	3
+		B addr	3
+		Reg sel	3
+		R/W 	1
+	ALU control
+		16 ops	4
+	MUX control	(D MUX & B MUX)
+		B sel	1
+		D sel	1
+	PC control	()
+		Inc/Ld	1
+		Br/J	1
+		Br cond	1 
+	Data memory
+		Addr	16
+		Data	16
+		DMR/W 	1
+		
+		
+		
+--------------------------------------------------------------------------------------------------------------------------------------------------------
+
+the program counter is huge, provide address to instruction memory
+// Non sequential flow: branching //
+8 registers file, need 3 bit to determine Which A / B using/ Dest (3 b A sel, 3 b B sel, 3 b Dest sel, 7 for opcode)
+register constant operation: ??? (operand or address of operand)
+Instruction: 16 bits:
+instr word bits: 15 (access mem or multi regs op) 14(things that access mem, load (0)/store(1) ops) ,13 (data source: ALU or Memory), 12 (Branch op, for 2 ops only)
+ALU op code : bit 12 .. 9
+Dest reg: 8 .. 6
+A reg: 5 .. 3
+B reg: 2 .. 0
+
+----
+C level
+	int x = 3;
+	int y = 4;
+	x = x + y;
+	
+	
+--------------------------------------------------------------------------------------------
+
+PIPELINING
+
+software side
+	multitasking
+	
+Pipeline
+	tau: state delay = tau_m + dr (delay register)
+	
+	1st K*delay for 1 state
+	m-1 => (n-1)*time for 1  state
+	Tk = (K+(n-1)).tau
+
+without
+	n.k.tau
+	Tk = n.k.tau
+	
+	speed of a factor: Tk/Tkp
