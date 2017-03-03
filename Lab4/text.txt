@@ -137,7 +137,8 @@ relative to current position
 		until
 			PC <- adx
 		cond
-			pulse
+
+pulse
 
 Relative
 	No
@@ -147,7 +148,8 @@ Relative
 			PC <- PC + offset
 		cond
 			False:
-				PC <- PC + 1
+
+PC <- PC + 1
 				K: PC <- PC + 1
 			True
 				PC <- PC + offset
@@ -157,7 +159,8 @@ Relative
 		00: NO
 		01: J
 		10: Branch
-	cond or uncond:		1 bit
+
+cond or uncond:		1 bit
 		0: uncond
 		1: cond
 	cond
@@ -166,6 +169,7 @@ Relative
 		10: Carry
 		11: Overflow
 		
+
 Single clock cycle control
 	Reg Set <- reg file
 	bus structure <= several local busses
@@ -231,3 +235,67 @@ without
 	Tk = n.k.tau
 	
 	speed of a factor: Tk/Tkp
+
+
+
+module integrate_DE1_testbench();
+
+	wire clk; // 50MHz clock.
+	wire [6:0] HEX0, HEX1, HEX2, HEX3, HEX4, HEX5;
+	wire [9:0] LEDR;
+	wire [3:0] KEY; // True when not pressed, False when pressed
+	wire [9:0] SW;
+
+	integrate_DE1 dux (clk, HEX0, HEX1, HEX2, HEX3, HEX4, HEX5, KEY, LEDR,
+SW);
+parameter CLOCK_PERIOD=100;
+
+	initial begin
+
+	clk <= 0;
+
+	forever #(CLOCK_PERIOD/2) clk <= ~clk;
+
+	end	
+initial begin 
+	
+	@(posedge clk);
+	@(posedge clk);
+	@(posedge clk);
+	@(posedge clk);
+	@(posedge clk);
+	@(posedge clk);
+	@(posedge clk);
+	@(posedge clk);
+	@(posedge clk);
+	@(posedge clk);
+	@(posedge clk);
+	@(posedge clk);
+	@(posedge clk);
+	@(posedge clk);
+	@(posedge clk);
+	@(posedge clk);
+	@(posedge clk);
+	@(posedge clk);
+	@(posedge clk);
+	@(posedge clk);
+	@(posedge clk);
+	@(posedge clk);
+	@(posedge clk);
+	@(posedge clk);
+	@(posedge clk);
+	@(posedge clk);
+	@(posedge clk);
+	@(posedge clk);
+	@(posedge clk);
+	@(posedge clk);
+	@(posedge clk);
+	@(posedge clk);
+	@(posedge clk);
+	@(posedge clk);
+	@(posedge clk);
+	
+$stop();
+end
+endmodule 	
+	
