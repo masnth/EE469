@@ -48,7 +48,7 @@ always@(*) begin
 		end
 		
 	//ORRI
-	0101101000x: begin
+	1011001000x: begin
 		imm_value = instruction[21:10];
 		rn = instruction[9:5];	// second operand
 		rd = instruction[4:0];	// destination
@@ -70,7 +70,7 @@ always@(*) begin
 		end
 		
 	//ADD
-	10000101100: begin
+	10001011000: begin
 		rm = instruction[20:16];
 		rn = instruction[9:5];
 		rd = instruction[4:0];
@@ -137,7 +137,7 @@ always@(*) begin
 		end
 	
 	//LDURSW
-	11111000000: begin
+	10111000100: begin
 		data_adx = instruction[20:12];
 		rn = instruction[9:5];
 		rd = instruction[4:0];
@@ -147,7 +147,7 @@ always@(*) begin
 		end
 	
 	//STURW
-	11111000010: begin
+	10111000000: begin
 		data_adx = instruction[20:12];
 		rn = instruction[9:5];
 		rd = instruction[4:0];
