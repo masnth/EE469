@@ -154,20 +154,22 @@ always@(*) begin
 		enLoad  = 1'b0;
 		enStore = 1'b1;
 		imm_sig = 1'b0;
+		aluControl = op_nop;
 		end
 	
 	//Branch
 	000101xxxxx: begin
 		address = instruction[25:0];
+		aluControl = op_nop;
 		end
 	
 	//Branch Register
 	11010110000: begin
-		
+		aluControl = op_nop;
 		end
 	
 	//B.GT
 	01010100xxx: begin
-	
+		aluControl = op_nop;
 		end
 endmodule
