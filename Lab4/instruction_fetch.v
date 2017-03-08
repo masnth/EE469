@@ -1,4 +1,4 @@
-module instruction_fetch(instruction, isBranch, isCondBranch, isBR, RegBranch, clk, rst, PCout, PC_in, CondBranch, UnCondBranch, inst_adx_br, inst_adx_non, muxBrOut, NormalOut);
+module instructionFetch(instruction, isBranch, isCondBranch, isBR, RegBranch, clk, rst, PCout, PC_in, CondBranch, UnCondBranch, inst_adx_br, inst_adx_non, muxBrOut, NormalOut);
 		input isBranch, isCondBranch, isBR;
 		input [31:0] RegBranch;
 		input clk, rst;
@@ -49,7 +49,7 @@ module instruction_fetch(instruction, isBranch, isCondBranch, isBR, RegBranch, c
 endmodule
 
 
-module instruction_fetch_testbench();
+module instructionFetch_testbench();
 
 	reg isBranch, isCondBranch, isBR;
 	reg [31:0] RegBranch;
@@ -61,7 +61,7 @@ module instruction_fetch_testbench();
 	wire [31:0] inst_adx_non;
 	wire [31:0] muxBrOut, NormalOut;
 
-	instruction_fetch dux (instruction, isBranch, isCondBranch, isBR, RegBranch, clk, rst, PCout, PC_in, CondBranch, UnCondBranch, inst_adx_br, inst_adx_non, muxBrOut, NormalOut);
+	instructionFetch dux (instruction, isBranch, isCondBranch, isBR, RegBranch, clk, rst, PCout, PC_in, CondBranch, UnCondBranch, inst_adx_br, inst_adx_non, muxBrOut, NormalOut);
 	
 	parameter CLOCK_PERIOD=100;
 	initial begin
