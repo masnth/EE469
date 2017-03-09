@@ -1,175 +1,292 @@
-module instr_decoder(instruction, imm_sig, rn, rd, rm, imm_value, enLoad, enStore, clk);
+module instr_decoder(instruction, aluControl, shamt, imm_sig, rn, rd, rm, imm_value, Mem2Reg, 
+Reg2Mem, isBranch, isCondBranch, isBR, reg_write, branch_adx, enableDFFOut, data_adx, clk);
 	
 	input clk;
 	input [31:0] instruction;
-	output reg [4:0] rn, rd, rm;
+	output reg [4:0] rn, rd, rm, branch_adx;
 	output reg [11:0] imm_value;
-	output reg enLoad;
-	output reg enStore;
+	output reg Mem2Reg;
+	output reg Reg2Mem;
 	output reg imm_sig;
 	output reg [2:0] aluControl;
+	output reg [5:0] shamt;
+	output reg isBranch, isBR, isCondBranch;
+	output reg reg_write;
+	output reg [10:0] data_adx; 
+	output reg enableDFFOut;
 	
-	parameter [2:0] op_nop = 3'b000; op_add = 3'b001; op_sub = 3'b010; op_and = 3'b011;
-op_or = 3'b100; op_eor = 3'b101; op_lsl = 3'b110;	
+	parameter [2:0] op_nop = 3'b000, op_add = 3'b001, op_sub = 3'b010, op_and = 3'b011,
+op_or = 3'b100, op_eor = 3'b101, op_lsl = 3'b110;	
 	
 always@(*) begin 
 	case (instruction[31:21])
 	// ADDI 
-	1001000100x: begin
+	11'b100100010000: begin
 		imm_value = instruction[21:10];
 		rn = instruction[9:5];	// second operand
 		rd = instruction[4:0];	// destination
-		enLoad  = 1'b0;
-		enStore = 1'b0;
-		imm_sig = 1'b1;
-		aluControl = op_add;
+		Mem2Reg  = 1'b0;			// Mem2Reg = Mem2Reg
+		Reg2Mem = 1'b0;			// Reg2Mem = Reg2Mem
+		imm_sig = 1'b1;			// immediate value
+		aluControl = op_add;	
+		reg_write = 'b1;				// write to register
+		enableDFFOut = 'b1;
+		
+		isBranch = 0;
+		isCondBranch = 0;
+		isBR = 0;
+		
 		end
 	
 	//SUBI
-	1101000100x: begin
+	11'b11010001000: begin
 		imm_value = instruction[21:10];
 		rn = instruction[9:5];	// second operand
 		rd = instruction[4:0];	// destination
-		enLoad  = 1'b0;
-		enStore = 1'b0;
+		Mem2Reg  = 1'b0;
+		Reg2Mem = 1'b0;
 		imm_sig = 1'b1;
-		aluControl = op_sub;
+		aluControl = op_sub;		
+		reg_write = 'b1;				// write to register
+		enableDFFOut = 'b1;
+		
+		isBranch = 0;
+		isCondBranch = 0;
+		isBR = 0;
 		end
 		
 	//ANDI
-	1001001000x: begin
+	11'b10010010000: begin
 		imm_value = instruction[21:10];
 		rn = instruction[9:5];	// second operand
 		rd = instruction[4:0];	// destination
-		enLoad  = 1'b0;
-		enStore = 1'b0;
+		Mem2Reg  = 1'b0;
+		Reg2Mem = 1'b0;
 		imm_sig = 1'b1;
 		aluControl = op_and;
+		reg_write = 'b1;				// write to register
+		enableDFFOut = 'b1;
+		
+		isBranch = 0;
+		isCondBranch = 0;
+		isBR = 0;
 		end
 		
 	//ORRI
-	1011001000x: begin
+	11'b10110010000: begin
 		imm_value = instruction[21:10];
 		rn = instruction[9:5];	// second operand
 		rd = instruction[4:0];	// destination
-		enLoad  = 1'b0;
-		enStore = 1'b0;
+		Mem2Reg  = 1'b0;
+		Reg2Mem = 1'b0;
 		imm_sig = 1'b1;
 		aluControl = op_or;
+		reg_write = 'b1;				// write to register
+		enableDFFOut = 'b1;
+		
+		isBranch = 0;
+		isCondBranch = 0;
+		isBR = 0;
 		end
 		
 	//EORI
-	1101001000x: begin
+	11'b11010010000: begin
 		imm_value = instruction[21:10];
 		rn = instruction[9:5];	// second operand
 		rd = instruction[4:0];	// destination
-		enLoad  = 1'b0;
-		enStore = 1'b0;
+		Mem2Reg  = 1'b0;
+		Reg2Mem = 1'b0;
 		imm_sig = 1'b1;
 		aluControl = op_eor;
+		reg_write = 'b1;				// write to register
+		enableDFFOut = 'b1;
+		
+		isBranch = 0;
+		isCondBranch = 0;
+		isBR = 0;
 		end
 		
 	//ADD
-	10001011000: begin
+	11'b10001011000: begin
 		rm = instruction[20:16];
 		rn = instruction[9:5];
 		rd = instruction[4:0];
-		enLoad  = 1'b0;
-		enStore = 1'b0;
+		Mem2Reg  = 1'b0;
+		Reg2Mem = 1'b0;
 		imm_sig = 1'b1;
 		aluControl = op_add;
+		reg_write = 'b1;				// write to register
+		enableDFFOut = 'b1;
+		
+		isBranch = 0;
+		isCondBranch = 0;
+		isBR = 0;
 		end
 		
 	//SUB
-	11001011000: begin
+	11'b11001011000: begin
 		rm = instruction[20:16];
 		rn = instruction[9:5];
 		rd = instruction[4:0];
-		enLoad  = 1'b0;
-		enStore = 1'b0;
+		Mem2Reg  = 1'b0;
+		Reg2Mem = 1'b0;
 		imm_sig = 1'b0;
 		aluControl = op_sub;
+		reg_write = 'b1;				// write to register
+		enableDFFOut = 'b1;
+		
+		isBranch = 0;
+		isCondBranch = 0;
+		isBR = 0;
 		end
 		
 	//AND
-	10001010000: begin
+	11'b10001010000: begin
 		rm = instruction[20:16];
 		rn = instruction[9:5];
 		rd = instruction[4:0];
-		enLoad  = 1'b0;
-		enStore = 1'b0;
+		Mem2Reg  = 1'b0;
+		Reg2Mem = 1'b0;
 		imm_sig = 1'b0;
 		aluControl = op_and;
+		reg_write = 'b1;				// write to register
+		enableDFFOut = 'b1;
+		
+		isBranch = 0;
+		isCondBranch = 0;
+		isBR = 0;
 		end
 	
 	//ORR
-	10101010000: begin
+	11'b10101010000: begin
 		rm = instruction[20:16];
 		rn = instruction[9:5];
 		rd = instruction[4:0];
-		enLoad  = 1'b0;
-		enStore = 1'b0;
+		Mem2Reg  = 1'b0;
+		Reg2Mem = 1'b0;
 		imm_sig = 1'b0;
 		aluControl = op_or;
+		reg_write = 'b1;				// write to register
+		enableDFFOut = 'b1;
+		
+		isBranch = 0;
+		isCondBranch = 0;
+		isBR = 0;
 		end
 	
 	//EOR
-	11001010000: begin
+	11'b11001010000: begin
 		rm = instruction[20:16];
 		rn = instruction[9:5];
 		rd = instruction[4:0];
-		enLoad  = 1'b0;
-		enStore = 1'b0;
+		Mem2Reg  = 1'b0;
+		Reg2Mem = 1'b0;
 		imm_sig = 1'b0;
 		aluControl = op_eor;
+		reg_write = 'b1;				// write to register
+		enableDFFOut = 'b1;
+		
+		isBranch = 0;
+		isCondBranch = 0;
+		isBR = 0;
 		end
 	
 	//LSL
-	11010011011: begin
+	11'b11010011011: begin
 		rm = instruction[20:16];
 		rn = instruction[9:5];
 		rd = instruction[4:0];
 		shamt = instruction[15:10];
-		enLoad  = 1'b0;
-		enStore = 1'b0;
+		Mem2Reg  = 1'b0;
+		Reg2Mem = 1'b0;
 		imm_sig = 1'b0;
 		aluControl = op_lsl;
+		reg_write = 'b1;				// write to register
+		
+		isBranch = 0;
+		isCondBranch = 0;
+		isBR = 0;
 		end
 	
 	//LDURSW
-	10111000100: begin
-		data_adx = instruction[20:12];
-		rn = instruction[9:5];
+	11'b10111000100: begin
+		imm_value = ({3'b000,instruction[20:12]}); // offset
+		rn = instruction[9:5]; // 
 		rd = instruction[4:0];
-		enLoad  = 1'b1;
-		enStore = 1'b0;
-		imm_sig = 1'b0;
+		Mem2Reg  = 1'b1;
+		Reg2Mem = 1'b0;
+		imm_sig = 1'b1;
+		reg_write = 'b1;				// write to register
+		enableDFFOut = 'b0;
+		aluControl = op_add;
+		
+		isBranch = 0;
+		isCondBranch = 0;
+		isBR = 0;
 		end
 	
 	//STURW
-	10111000000: begin
-		data_adx = instruction[20:12];
-		rn = instruction[9:5];
-		rd = instruction[4:0];
-		enLoad  = 1'b0;
-		enStore = 1'b1;
-		imm_sig = 1'b0;
-		aluControl = op_nop;
+	11'b10111000000: begin
+		imm_value = ({3'b000,instruction[20:12]}); // offset
+		rn = instruction[9:5]; //
+		rm = instruction[4:0];  // register address
+		Mem2Reg  = 1'b0;
+		Reg2Mem = 1'b1;
+		imm_sig = 1'b1;
+		aluControl = op_add;
+		reg_write = 'b1;				// write to register
+		enableDFFOut = 'b0;
+		
+		isBranch = 0;
+		isCondBranch = 0;
+		isBR = 0;
 		end
 	
 	//Branch
-	000101xxxxx: begin
-		address = instruction[25:0];
+	11'b000101?????: begin
+//		branch_adx = instruction[25:0];
 		aluControl = op_nop;
+		Mem2Reg  = 1'b0;
+		Reg2Mem = 1'b0;
+		imm_sig = 1'b0;
+		aluControl = op_nop;
+		reg_write = 'b0;				// write to register
+		enableDFFOut = 'b0;
+		
+		isBranch = 1;
+		isCondBranch = 0;
+		isBR = 0;
 		end
 	
 	//Branch Register
-	11010110000: begin
+	11'b11010110000: begin
 		aluControl = op_nop;
+		Mem2Reg  = 1'b0;
+		Reg2Mem = 1'b0;
+		imm_sig = 1'b0;
+		reg_write = 'b0;				// write to register
+		enableDFFOut = 'b0;
+		
+		isBranch = 1;
+		isCondBranch = 0;
+		isBR = 1;
 		end
 	
 	//B.GT
-	01010100xxx: begin
-		aluControl = op_nop;
+	11'b01010100???: begin
+		if(instruction[4:0] == 5'b0) begin
+			Mem2Reg  = 1'b0;
+			Reg2Mem = 1'b0;
+			imm_sig = 1'b0;
+			aluControl = op_nop;
+			reg_write = 'b0;				// write to register
+			enableDFFOut = 'b0;
+			
+			isBranch = 1;
+			isCondBranch = 1;
+			isBR = 0;
 		end
+		end
+	endcase
+end
 endmodule
