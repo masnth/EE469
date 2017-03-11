@@ -62,3 +62,5 @@ xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx // compare (A-B) > 3
 			mem[15] <= 32'b11010011011000100001110000000010; //C = C<<5
 			mem[16] <= 32'b10111000000000001100000011100100; //*dPtr = 7
 
+
+// Khong lay tu bit 0, bat dau lay tu bit 1
